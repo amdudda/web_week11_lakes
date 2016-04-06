@@ -7,17 +7,31 @@ block content
 	.lakesRun
 		if lakes.length
 			for lake in lakes
-				p Lake name: #{lake.lake}
+				p Lake name: 
+					b #{lake.lake}
+				if (runs)
+					p (this lake has runs)
 				ul
 					for run in lake.runs
-						li You took #{run.time} minutes on #{run.date}
+						li You took #{run.time} minutes on #{run.date} (runid is #{run._id})
+					form(id="addTime_#{lake.lake}" action="/addTime" method="POST")
+						br
+						label Run date
+							input(name="date" type="date" required)
+						br
+						label Run time, in minutes
+							input(name="time" type="text" required)
+						br
+						// we need to know which lake to append the record to
+						input(type="hidden" name="lake" value="#{lake.lake}")
+						input(type="submit" name="addTime" value="Add New Time")
 		else
 			p No runs have been recorded yet!
 
 	hr
 
 	.addNewLake
-		form(submit="/" method="POST")
+		form(id="addNewLakes" action="/" method="POST")
 			label Lake name (required)
 				input(name="lake" type="text" required)
 			br

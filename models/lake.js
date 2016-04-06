@@ -1,10 +1,18 @@
 var mongoose = require("mongoose");
 var Schema = mongoose.Schema;
+var ObjectID = Schema.ObjectId;
 
 /*
  * a database to log runs around various lakes
  * modeled after Bird from birdwatcher exercize
  */
+var runSchema = new Schema({
+		//id: ObjectID,
+		date: { type: Date, default: Date.now },
+		time: { type: Number, required: true }
+	});
+
+var Run = mongoose.model('Run', runSchema);
 
 var lakeSchema = new Schema({
 	lake: {	// each lake should be unique; let's convert to lowercase to make that easy
@@ -13,10 +21,7 @@ var lakeSchema = new Schema({
 		unique: true,
 		lowercase : true 
 		},
-	runs: [ {  // an array of run dates and run times
-		date: { type: Date, default: Date.now },
-		time: { type: Number, required: true }
-		} ]
+	runs: [ runSchema ]
 	});
 
 var Lake = mongoose.model('Lake', lakeSchema);

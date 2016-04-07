@@ -1,7 +1,9 @@
 extends layout
-
 block content
 	h1 Lake runs
+	p Your fastest times for each lake are noted in 
+		span(style="color:red;font-weight:bold") bold, red 
+		span text.
 	hr
 
 	.lakesRun
@@ -9,11 +11,18 @@ block content
 			for lake in lakes
 				p Lake name: 
 					b #{lake.lake}
-				if (runs)
-					p (this lake has runs)
+					- var mintime= 0
 				ul
+					- for run in lake.runs
+						- var mytime = run.time
+						- if (mintime=== 0) mintime= mytime
+						- else if (run.time < mintime) mintime= run.time
 					for run in lake.runs
-						li You took #{run.time} minutes on #{run.date} (runid is #{run._id})
+						if (run.time === mintime)
+							li(style="color:red;font-weight:bold") You took #{run.time} minutes on #{run.date}
+						else
+							li You took #{run.time} minutes on #{run.date}
+							// (runid is #{run._id})
 					form(id="addTime_#{lake.lake}" action="/addTime" method="POST")
 						br
 						label Run date

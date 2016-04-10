@@ -10,7 +10,7 @@ router.get('/', function(req, res, next) {
 	// just like in birdwatcher, we ask our schema to find all Lake documents and pass them to index.jade
 	Lake.find(function(err,lakeDocs) {
 		if (err) return next(err);  // handle errors
-		res.render('index', { lakes : lakeDocs, error:req.flash('error') });  // render our page
+		res.render('index', { title: 'Lake Runs - A.M. Dudda', lakes : lakeDocs, error:req.flash('error') });  // render our page
 	});
 });
 
@@ -55,7 +55,6 @@ router.post('/',function(req, res, next) {
 });
 
 // add a new time for the lake via POST
-// why is it 404'ing when I try to add time?
 router.post('/addTime', function(req, res, next) {
 	var myLake = req.body.lake;
 	var myDate = req.body.date;
@@ -76,5 +75,17 @@ router.post('/addTime', function(req, res, next) {
 	});
 
 });
+
+/*
+ * delete a lake via POST
+ */
+router.post('/deleteLake', function(req, res, next) {
+	var lake_to_delete = req.body.lake.substring(7);
+	Lake.remove({lake: lake_to_delete}, function(err) {
+		if (err) return next(err); // handle errors
+		res.redirect('/');
+	});
+});
+
 
 module.exports = router;

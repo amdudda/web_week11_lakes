@@ -1,27 +1,27 @@
 extends layout
-block content
-	h1 Lake runs
-	p Your fastest times for each lake are noted in 
-		span(style="color:red;font-weight:bold") bold, red 
-		span text.
-	hr
 
+block content
 	.lakesRun
 		if lakes.length
 			for lake in lakes
 				p Lake name: 
 					b #{lake.lake}
-					- var mintime= 0
+					form(id="deleteLake" action="/deleteLake" method="POST" class="indent")
+						input(name="lake" type="submit" value="Delete #{lake.lake}")
+						b &nbsp;Warning!
+						span &nbsp;This will delete all times associated with this lake.
 				ul
+					- var mintime= 0
 					- for run in lake.runs
 						- var mytime = run.time
 						- if (mintime=== 0) mintime= mytime
 						- else if (run.time < mintime) mintime= run.time
 					for run in lake.runs
+						- var shortdate = run.date.toLocaleDateString()
 						if (run.time === mintime)
-							li(style="color:red;font-weight:bold") You took #{run.time} minutes on #{run.date}
+							li.bestTime You took #{run.time} minutes on #{shortdate}
 						else
-							li You took #{run.time} minutes on #{run.date}
+							li You took #{run.time} minutes on #{shortdate}
 							// (runid is #{run._id})
 					form(id="addTime_#{lake.lake}" action="/addTime" method="POST")
 						br
@@ -34,10 +34,11 @@ block content
 						// we need to know which lake to append the record to
 						input(type="hidden" name="lake" value="#{lake.lake}")
 						input(type="submit" name="addTime" value="Add New Time")
+				hr
 		else
 			p No runs have been recorded yet!
-
-	hr
+			hr
+	
 
 	.addNewLake
 		form(id="addNewLakes" action="/" method="POST")

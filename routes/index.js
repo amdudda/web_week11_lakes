@@ -8,7 +8,9 @@ var Lake = require('../models/lake.js');
 router.get('/', function(req, res, next) {
 
 	// just like in birdwatcher, we ask our schema to find all Lake documents and pass them to index.jade
-	Lake.find(function(err,lakeDocs) {
+	// found syntax for retrieving sorted results at
+	// https://groups.google.com/forum/#!topic/keystonejs/GdDGtsF6OG4	
+	Lake.find().sort({lake:'asc'}).exec(function(err,lakeDocs) {
 		if (err) return next(err);  // handle errors
 		res.render('index', { title: 'Lake Runs - A.M. Dudda', lakes : lakeDocs, error:req.flash('error') });  // render our page
 	});
